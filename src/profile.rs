@@ -6,7 +6,7 @@ use ngrams::ngrams;
 
 
 pub type StringCountPair = (String, u64);
-pub type LanguageProfile = Vec<StringCountPair>;
+pub type LanguageProfile = HashMap<String, usize>;
 
 
 pub fn build_from_text(text: &str) -> LanguageProfile {
@@ -17,8 +17,13 @@ pub fn build_from_text(text: &str) -> LanguageProfile {
         }
     }
 
-    let mut profile = vec_from_hashmap(&ngram_counts);
-    profile.sort_by(cmp_counts_reverse);
+    let mut ngrams_and_counts = vec_from_hashmap(&ngram_counts);
+    ngrams_and_counts.sort_by(cmp_counts_reverse);
+
+    let mut profile = LanguageProfile::new();
+    for (index, item) in ngrams_and_counts.iter().enumerate() {
+        profile.insert((*item).clone().0, index);
+    }
 
     profile
 }
