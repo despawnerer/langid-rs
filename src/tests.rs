@@ -24,7 +24,7 @@ fn trigrams() {
 #[test]
 fn longer_than_string_ngrams() {
     let text = "String";
-    let sevengrams: Vec<String> = ngrams(text, 7).collect();
+    let sevengrams: Vec<_> = ngrams(text, 7).collect();
     let empty_vector: Vec<String> = Vec::new();
     assert_eq!(sevengrams, empty_vector);
 }
