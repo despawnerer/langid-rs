@@ -1,0 +1,4 @@
+[package]
+name = "langid"
+version = "0.1.0"
+authors = ["Aleksei Voronov <despawn@gmail.com>"]
