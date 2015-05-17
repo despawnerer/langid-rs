@@ -1,4 +1,4 @@
-pub mod ngrams;
-pub mod utils;
+pub mod profile;
 
+mod ngrams;
 mod tests;
