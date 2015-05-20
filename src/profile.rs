@@ -1,6 +1,12 @@
+extern crate rustc_serialize;
+
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::hash::Hash;
+use std::io::prelude::*;
+use std::fs::File;
+
+use self::rustc_serialize::json;
 
 use ngrams::ngrams;
 
@@ -26,6 +32,21 @@ pub fn build_from_text(text: &str) -> LanguageProfile {
     }
 
     profile
+}
+
+
+pub fn save(profile: &LanguageProfile, path: &str) {
+    let encoded_profile = json::encode(&profile).unwrap();
+    let mut f = File::create(path).unwrap();
+    f.write_all(encoded_profile.as_bytes()).unwrap();
+}
+
+
+pub fn load(path: &str) -> LanguageProfile {
+    let mut f = File::open(path).unwrap();
+    let mut encoded_profile = String::new();
+    f.read_to_string(&mut encoded_profile);
+    json::decode(&encoded_profile).unwrap()
 }
 
 
