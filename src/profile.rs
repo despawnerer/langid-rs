@@ -11,7 +11,7 @@ use self::rustc_serialize::json;
 use ngrams::ngrams;
 
 
-pub type StringCountPair = (String, u64);
+pub type StringCountPair = (String, usize);
 pub struct Profile {
     pub ngram_ranks: HashMap<String, usize>,
 }
@@ -22,7 +22,7 @@ impl Profile {
         let mut ngram_counts = HashMap::new();
         for n in 1..6 {
             for ngram in ngrams(text, n) {
-                *ngram_counts.entry(ngram).or_insert(0u64) += 1;
+                *ngram_counts.entry(ngram).or_insert(0usize) += 1;
             }
         }
 
