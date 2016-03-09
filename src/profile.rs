@@ -45,7 +45,7 @@ impl Profile {
         Profile { ngram_ranks: ngram_ranks }
     }
 
-    pub fn save_to_file(self, path: &str) {
+    pub fn save_to_file(&self, path: &str) {
         let encoded_profile = json::encode(&self.ngram_ranks).unwrap();
         let mut f = File::create(path).unwrap();
         f.write_all(encoded_profile.as_bytes()).unwrap();
