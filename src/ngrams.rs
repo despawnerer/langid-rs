@@ -22,24 +22,26 @@ impl<'a> Iterator for NGrams<'a> {
     fn next(&mut self) -> Option<String> {
         if self.last_ngram.len() < self.length {
             while self.last_ngram.len() < self.length {
-                let new_char_option = self.chars.next();
-                if new_char_option == None {
-                    return None;
-                }
-
-                self.last_ngram.push(new_char_option.unwrap())
+                match self.chars.next() {
+                    Some(character) => {
+                        self.last_ngram.push(character);
+                    },
+                    None => {
+                        return None;
+                    },
+                };
             }
             return Some(self.last_ngram.clone());
         }
 
-        let new_char_option = self.chars.next();
-        if new_char_option == None {
-            return None;
+        match self.chars.next() {
+            Some(character) => {
+                let ngram = self.build_new_ngram(character);
+                self.last_ngram = ngram.clone();
+                Some(ngram)
+            },
+            None => None,
         }
-
-        let ngram = self.build_new_ngram(new_char_option.unwrap());
-        self.last_ngram = ngram.clone();
-        Some(ngram)
     }
 }
 
