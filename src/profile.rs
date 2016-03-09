@@ -12,41 +12,44 @@ use ngrams::ngrams;
 
 
 pub type StringCountPair = (String, u64);
-pub type LanguageProfile = HashMap<String, usize>;
+pub struct Profile {
+    pub ngram_ranks: HashMap<String, usize>,
+}
 
 
-pub fn build_from_text(text: &str) -> LanguageProfile {
-    let mut ngram_counts = HashMap::new();
-    for n in 1..6 {
-        for ngram in ngrams(text, n) {
-            *ngram_counts.entry(ngram).or_insert(0u64) += 1;
+impl Profile {
+    pub fn build_from_text(text: &str) -> Profile {
+        let mut ngram_counts = HashMap::new();
+        for n in 1..6 {
+            for ngram in ngrams(text, n) {
+                *ngram_counts.entry(ngram).or_insert(0u64) += 1;
+            }
         }
+
+        let mut ngrams_and_counts = vec_from_hashmap(&ngram_counts);
+        ngrams_and_counts.sort_by(cmp_counts_reverse);
+
+        let mut ngram_ranks = HashMap::new();
+        for (index, item) in ngrams_and_counts.iter().enumerate() {
+            ngram_ranks.insert((*item).clone().0, index);
+        }
+
+        Profile { ngram_ranks: ngram_ranks }
     }
 
-    let mut ngrams_and_counts = vec_from_hashmap(&ngram_counts);
-    ngrams_and_counts.sort_by(cmp_counts_reverse);
-
-    let mut profile = LanguageProfile::new();
-    for (index, item) in ngrams_and_counts.iter().enumerate() {
-        profile.insert((*item).clone().0, index);
+    pub fn load_from_file(path: &str) -> Profile {
+        let mut f = File::open(path).unwrap();
+        let mut encoded_profile = String::new();
+        f.read_to_string(&mut encoded_profile);
+        let ngram_ranks = json::decode(&encoded_profile).unwrap();
+        Profile { ngram_ranks: ngram_ranks }
     }
 
-    profile
-}
-
-
-pub fn save(profile: &LanguageProfile, path: &str) {
-    let encoded_profile = json::encode(&profile).unwrap();
-    let mut f = File::create(path).unwrap();
-    f.write_all(encoded_profile.as_bytes()).unwrap();
-}
-
-
-pub fn load(path: &str) -> LanguageProfile {
-    let mut f = File::open(path).unwrap();
-    let mut encoded_profile = String::new();
-    f.read_to_string(&mut encoded_profile);
-    json::decode(&encoded_profile).unwrap()
+    pub fn save_to_file(self, path: &str) {
+        let encoded_profile = json::encode(&self.ngram_ranks).unwrap();
+        let mut f = File::create(path).unwrap();
+        f.write_all(encoded_profile.as_bytes()).unwrap();
+    }
 }
 
 
