@@ -1,5 +1,6 @@
 extern crate rustc_serialize;
 
+use std::cmp::min;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::hash::Hash;
@@ -30,7 +31,8 @@ impl Profile {
         ngrams_and_counts.sort_by(cmp_counts_reverse);
 
         let mut ngram_ranks = HashMap::new();
-        for (index, item) in ngrams_and_counts.iter().enumerate() {
+        let size = min(ngrams_and_counts.len(), 300);
+        for (index, item) in ngrams_and_counts[..size].iter().enumerate() {
             ngram_ranks.insert((*item).clone().0, index);
         }
 
