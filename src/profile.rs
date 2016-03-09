@@ -50,10 +50,26 @@ impl Profile {
         let mut f = File::create(path).unwrap();
         f.write_all(encoded_profile.as_bytes()).unwrap();
     }
+
+    pub fn compare(&self, other: &Profile) -> usize {
+        let max_difference = other.ngram_ranks.len();
+        let mut difference = 0;
+        for (ngram, index) in self.ngram_ranks.iter() {
+            difference += match other.ngram_ranks.get(ngram) {
+                Some(other_index) => get_difference(*index, *other_index),
+                None => max_difference,
+            }
+        }
+        difference
+    }
 }
 
 
 // useful utils
+
+fn get_difference(a: usize, b: usize) -> usize {
+    if a > b { a - b } else { b - a }
+}
 
 fn vec_from_hashmap<K, V> (hashmap: &HashMap<K, V>) -> Vec<(K, V)>
          where K: Eq + Hash + Clone, V: Clone {
