@@ -53,6 +53,10 @@ impl Profile {
         f.write_all(encoded_profile.as_bytes()).unwrap();
     }
 
+    pub fn choose_best_match<'a>(&'a self, others: &Vec<&'a Profile>) -> &Profile {
+        find_min_by_key(others, |other| self.compare(other)).unwrap()
+    }
+
     pub fn compare(&self, other: &Profile) -> usize {
         let max_difference = other.ngram_ranks.len();
         let mut difference = 0;
@@ -68,6 +72,22 @@ impl Profile {
 
 
 // useful utils
+
+fn find_min_by_key<T, I, F>(iterable: I, key: F) -> Option<T>
+    where I : IntoIterator<Item=T>,
+          F : Fn(&T) -> usize {
+
+    let mut min_value = None;
+    let mut min_item = None;
+    for item in iterable {
+        let value = key(&item);
+        if min_value == None || value < min_value.unwrap() {
+            min_value = Some(value);
+            min_item = Some(item);
+        }
+    }
+    min_item
+}
 
 fn get_difference(a: usize, b: usize) -> usize {
     if a > b { a - b } else { b - a }
