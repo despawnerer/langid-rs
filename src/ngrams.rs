@@ -1,16 +1,16 @@
 use std;
 
 
-pub fn ngrams(text: &str, n: usize) -> NGrams {
+pub fn ngrams(text: &str, length: usize) -> NGrams {
     NGrams {
-        n: n,
+        length: length,
         chars: text.chars(),
-        last_ngram: String::with_capacity(n*2),
+        last_ngram: String::with_capacity(length*2),
     }
 }
 
 pub struct NGrams<'a> {
-    n: usize,
+    length: usize,
     chars: std::str::Chars<'a>,
     last_ngram: String,
 }
@@ -20,8 +20,8 @@ impl<'a> Iterator for NGrams<'a> {
     type Item = String;
 
     fn next(&mut self) -> Option<String> {
-        if self.last_ngram.len() < self.n {
-            while self.last_ngram.len() < self.n {
+        if self.last_ngram.len() < self.length {
+            while self.last_ngram.len() < self.length {
                 let new_char_option = self.chars.next();
                 if new_char_option == None {
                     return None;
@@ -44,14 +44,14 @@ impl<'a> Iterator for NGrams<'a> {
 }
 
 impl<'a> NGrams<'a> {
-    fn build_new_ngram(&mut self, new_char: char) -> String {
-        let mut ngram = String::with_capacity(self.n*2);
+    fn build_new_ngram(&mut self, new_character: char) -> String {
+        let mut ngram = String::with_capacity(self.length*2);
         let current_chars = self.last_ngram.chars().skip(1);
 
-        for char in current_chars {
-            ngram.push(char);
+        for character in current_chars {
+            ngram.push(character);
         }
-        ngram.push(new_char);
+        ngram.push(new_character);
 
         ngram
     }
