@@ -1,5 +1,6 @@
-use model::Model;
 use std::collections::HashMap;
+
+use model::Model;
 
 
 pub struct Classifier {
