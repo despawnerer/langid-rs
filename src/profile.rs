@@ -11,7 +11,8 @@ use self::rustc_serialize::json;
 use ngrams::ngrams;
 
 
-pub type StringCountPair = (String, usize);
+type StringCountPair = (String, usize);
+
 pub struct Profile {
     pub ngram_ranks: HashMap<String, usize>,
 }
