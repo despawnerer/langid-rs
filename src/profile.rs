@@ -31,8 +31,7 @@ impl Profile {
         ngrams_and_counts.sort_by(cmp_counts_reverse);
 
         let mut ngram_ranks = HashMap::new();
-        let size = min(ngrams_and_counts.len(), 300);
-        for (index, item) in ngrams_and_counts[..size].iter().enumerate() {
+        for (index, item) in ngrams_and_counts.iter().enumerate() {
             ngram_ranks.insert((*item).clone().0, index);
         }
 
