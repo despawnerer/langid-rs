@@ -1,6 +1,5 @@
 extern crate rustc_serialize;
 
-use std::cmp::min;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::hash::Hash;
