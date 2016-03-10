@@ -1,34 +1,29 @@
-use profile::Profile;
+use model::Model;
 use std::collections::HashMap;
 
 
 pub struct Classifier {
-    profiles: HashMap<String, Profile>
+    models: HashMap<String, Model>
 }
 
 
 impl Classifier {
     pub fn new() -> Classifier {
-        Classifier { profiles: HashMap::new() }
+        Classifier { models: HashMap::new() }
     }
 
-    pub fn add_profile_from_text(&mut self, text: &str, language: &str) {
-        let profile = Profile::build_from_text(text);
-        self.profiles.insert(language.to_string(), profile);
-    }
-
-    pub fn add_profile_from_file(&mut self, filename: &str, language: &str) {
-        let profile = Profile::load_from_file(filename);
-        self.profiles.insert(language.to_string(), profile);
+    pub fn train(&mut self, text: &str, name: &str) {
+        let model = Model::build_from_text(text);
+        self.models.insert(name.to_string(), model);
     }
 
     pub fn classify(&self, text: &str) -> &String {
-        let profile = Profile::build_from_text(text);
-        let (language, matched_profile) = find_min_by_key(
-            self.profiles.iter(),
-            |&(language, other_profile)| profile.compare(other_profile)
+        let model = Model::build_from_text(text);
+        let (name, matched_model) = find_min_by_key(
+            self.models.iter(),
+            |&(name, other_model)| model.compare(other_model)
         ).unwrap();
-        language
+        name
     }
 }
 

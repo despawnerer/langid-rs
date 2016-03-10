@@ -13,13 +13,13 @@ use ngrams::ngrams;
 
 type StringCountPair = (String, usize);
 
-pub struct Profile {
+pub struct Model {
     pub ngram_ranks: HashMap<String, usize>,
 }
 
 
-impl Profile {
-    pub fn build_from_text(text: &str) -> Profile {
+impl Model {
+    pub fn build_from_text(text: &str) -> Model {
         let mut ngram_counts = HashMap::new();
         for n in 1..6 {
             for ngram in ngrams(text, n) {
@@ -35,15 +35,15 @@ impl Profile {
             ngram_ranks.insert((*item).clone().0, index);
         }
 
-        Profile { ngram_ranks: ngram_ranks }
+        Model { ngram_ranks: ngram_ranks }
     }
 
-    pub fn load_from_file(path: &str) -> Profile {
+    pub fn load_from_file(path: &str) -> Model {
         let mut f = File::open(path).unwrap();
         let mut encoded_profile = String::new();
         f.read_to_string(&mut encoded_profile);
         let ngram_ranks = json::decode(&encoded_profile).unwrap();
-        Profile { ngram_ranks: ngram_ranks }
+        Model { ngram_ranks: ngram_ranks }
     }
 
     pub fn save_to_file(&self, path: &str) {
@@ -52,7 +52,7 @@ impl Profile {
         f.write_all(encoded_profile.as_bytes()).unwrap();
     }
 
-    pub fn compare(&self, other: &Profile) -> usize {
+    pub fn compare(&self, other: &Model) -> usize {
         let max_difference = other.ngram_ranks.len();
         let mut difference = 0;
         for (ngram, index) in self.ngram_ranks.iter() {
