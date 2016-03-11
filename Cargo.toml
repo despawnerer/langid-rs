@@ -5,3 +5,4 @@ authors = ["Aleksei Voronov <despawn@gmail.com>"]
 
 [dependencies]
 rustc-serialize = "0.3.18"
+itertools = "0.4.11"

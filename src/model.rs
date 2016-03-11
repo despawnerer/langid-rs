@@ -1,17 +1,15 @@
 extern crate rustc_serialize;
+extern crate itertools;
 
-use std::cmp::Ordering;
 use std::collections::HashMap;
-use std::hash::Hash;
 use std::io::prelude::*;
 use std::fs::File;
 
+use self::itertools::Itertools;
 use self::rustc_serialize::json;
 
 use ngrams::ngrams;
 
-
-type StringCountPair = (String, usize);
 
 pub struct Model {
     pub ngram_ranks: HashMap<String, usize>,
@@ -27,12 +25,15 @@ impl Model {
             }
         }
 
-        let mut ngrams_and_counts = vec_from_hashmap(&ngram_counts);
-        ngrams_and_counts.sort_by(cmp_counts_reverse);
+        let ngrams = ngram_counts
+            .into_iter()
+            .sorted_by(|a, b| Ord::cmp(&b.1, &a.1))
+            .into_iter()
+            .map(|(ngram, _count)| ngram);
 
         let mut ngram_ranks = HashMap::new();
-        for (index, item) in ngrams_and_counts.iter().enumerate() {
-            ngram_ranks.insert((*item).clone().0, index);
+        for (rank, ngram) in ngrams.enumerate() {
+            ngram_ranks.insert(ngram, rank);
         }
 
         Model { ngram_ranks: ngram_ranks }
@@ -65,23 +66,6 @@ impl Model {
     }
 }
 
-
-// useful utils
-
 fn get_difference(a: usize, b: usize) -> usize {
     if a > b { a - b } else { b - a }
-}
-
-fn vec_from_hashmap<K, V> (hashmap: &HashMap<K, V>) -> Vec<(K, V)>
-         where K: Eq + Hash + Clone, V: Clone {
-    let mut vec: Vec<(K, V)> = Vec::new();
-    for (key, value) in hashmap.iter() {
-        let item = ((*key).clone(), (*value).clone());
-        vec.push(item);
-    }
-    vec
-}
-
-fn cmp_counts_reverse(a: &StringCountPair, b: &StringCountPair) -> Ordering {
-    b.1.cmp(&a.1)
 }
