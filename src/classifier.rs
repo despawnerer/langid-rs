@@ -20,9 +20,9 @@ impl Classifier {
 
     pub fn classify(&self, text: &str) -> &String {
         let model = Model::build_from_text(text);
-        let (name, matched_model) = self.models
+        let (name, _) = self.models
             .iter()
-            .min_by_key(|&(name, other_model)| model.compare(other_model))
+            .min_by_key(|&(_, other_model)| model.compare(other_model))
             .unwrap();
         name
     }
