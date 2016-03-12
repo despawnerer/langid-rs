@@ -20,4 +20,9 @@ fn main() {
         "Russian sample: {}",
         classifier.classify("А это кажется пример текста на русском языке.")
     );
+
+    println!(
+        "Another russian sample: {}",
+        classifier.classify("Здесь есть еще один пример текста.")
+    );
 }
