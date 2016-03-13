@@ -11,9 +11,12 @@ impl Classifier {
         Classifier { models: Vec::new() }
     }
 
-    pub fn train(&mut self, text: &str, name: &str) {
+    pub fn train(&mut self, text: &str, name: &str) -> &Model {
         let model = Model::build_from_text(text);
         self.models.push((name.to_string(), model));
+
+        // FIXME: is this really the best way to do this?
+        &self.models.last().unwrap().1
     }
 
     pub fn classify(&self, text: &str) -> &String {
