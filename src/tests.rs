@@ -1,4 +1,19 @@
 use ngrams::ngrams;
+use model::Model;
+
+
+//model
+
+#[test]
+fn test_serialization_and_deserialization() {
+    let model = Model::build_from_text("Testing text for serialization");
+    let serialized = model.serialize();
+    let deserialized = Model::deserialize(serialized);
+    assert_eq!(model.ngram_ranks, deserialized.ngram_ranks);
+}
+
+
+// ngrams
 
 #[test]
 fn unigrams() {

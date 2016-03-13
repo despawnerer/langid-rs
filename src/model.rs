@@ -2,8 +2,6 @@ extern crate rustc_serialize;
 extern crate itertools;
 
 use std::collections::HashMap;
-use std::io::prelude::*;
-use std::fs::File;
 
 use self::itertools::Itertools;
 use self::rustc_serialize::json;
@@ -39,18 +37,14 @@ impl Model {
         Model { ngram_ranks: ngram_ranks }
     }
 
-    pub fn load_from_file(path: &str) -> Model {
-        let mut f = File::open(path).unwrap();
-        let mut encoded_profile = String::new();
-        f.read_to_string(&mut encoded_profile);
-        let ngram_ranks = json::decode(&encoded_profile).unwrap();
+    pub fn deserialize(bytes: Vec<u8>) -> Model {
+        let string = String::from_utf8(bytes).unwrap();
+        let ngram_ranks = json::decode(string.as_str()).unwrap();
         Model { ngram_ranks: ngram_ranks }
     }
 
-    pub fn save_to_file(&self, path: &str) {
-        let encoded_profile = json::encode(&self.ngram_ranks).unwrap();
-        let mut f = File::create(path).unwrap();
-        f.write_all(encoded_profile.as_bytes()).unwrap();
+    pub fn serialize(&self) -> Vec<u8> {
+        json::encode(&self.ngram_ranks).unwrap().into_bytes()
     }
 
     pub fn compare(&self, other: &Model) -> usize {
@@ -65,6 +59,7 @@ impl Model {
         difference
     }
 }
+
 
 fn get_difference(a: usize, b: usize) -> usize {
     if a > b { a - b } else { b - a }
