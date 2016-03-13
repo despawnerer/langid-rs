@@ -39,28 +39,28 @@ fn test_classification() {
 // ngrams
 
 #[test]
-fn unigrams() {
+fn test_unigrams() {
     let text = "Estimates";
     let unigrams: Vec<_> = ngrams(text, 1).collect();
     assert_eq!(unigrams, ["E", "s", "t", "i", "m", "a", "t", "e", "s"]);
 }
 
 #[test]
-fn bigrams() {
+fn test_bigrams() {
     let text = "Estimates";
     let bigrams: Vec<_> = ngrams(text, 2).collect();
     assert_eq!(bigrams, ["Es", "st", "ti", "im", "ma", "at", "te", "es"]);
 }
 
 #[test]
-fn trigrams() {
+fn test_trigrams() {
     let text = "Estimates";
     let trigrams: Vec<_> = ngrams(text, 3).collect();
     assert_eq!(trigrams, ["Est", "sti", "tim", "ima", "mat", "ate", "tes"]);
 }
 
 #[test]
-fn longer_than_string_ngrams() {
+fn test_longer_than_string_ngrams() {
     let text = "String";
     let sevengrams: Vec<_> = ngrams(text, 7).collect();
     let empty_vector: Vec<String> = Vec::new();
