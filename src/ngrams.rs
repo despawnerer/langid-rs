@@ -1,39 +1,29 @@
-use std;
-
+use std::str::CharIndices;
+use std::iter::{self, Skip, Zip, Once, Chain};
 
 pub fn ngrams(text: &str, length: usize) -> NGramIterator {
     NGramIterator {
-        length: length,
-        chars: text.chars(),
-        last_ngram: String::new(),
+        text: text,
+        windows: text.char_indices().zip(text.char_indices()
+                                             // Fake "end" char. There are
+                                             // probably more efficient ways to
+                                             // do this but this works.
+                                             .chain(iter::once((text.len(), 0 as char)))
+                                             .skip(length)),
     }
 }
 
 pub struct NGramIterator<'a> {
-    length: usize,
-    chars: std::str::Chars<'a>,
-    last_ngram: String,
+    text: &'a str,
+    // Some day, this kind of type won't be necessary. Some day...
+    windows: Zip<CharIndices<'a>, Skip<Chain<CharIndices<'a>, Once<(usize, char)>>>>,
 }
 
 
 impl<'a> Iterator for NGramIterator<'a> {
-    type Item = String;
+    type Item = &'a str;
 
-    fn next(&mut self) -> Option<String> {
-        let mut ngram: String = self.last_ngram.chars().skip(1).collect();
-
-        while ngram.len() < self.length {
-            match self.chars.next() {
-                Some(character) => {
-                    ngram.push(character);
-                },
-                None => {
-                    return None;
-                },
-            };
-        }
-
-        self.last_ngram = ngram.clone();
-        return Some(ngram);
+    fn next(&mut self) -> Option<&'a str> {
+        self.windows.next().map(|((a, _), (b, _))| &self.text[a..b])
     }
 }
