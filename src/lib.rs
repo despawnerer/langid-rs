@@ -1,5 +1,5 @@
 pub mod classifier;
+pub mod model;
 
-mod model;
 mod ngrams;
 mod tests;
