@@ -19,7 +19,14 @@ impl Model {
         let mut ngram_counts = HashMap::new();
         for n in 1..6 {
             for ngram in ngrams(text, n) {
-                *ngram_counts.entry(ngram).or_insert(0usize) += 1;
+                // If you don't want to unecessarily allocate strings, this is
+                // the only way to do it. This RFC should fix this if it ever
+                // gets accepted: // https://github.com/rust-lang/rfcs/pull/1533
+                if let Some(count) = ngram_counts.get_mut(ngram) {
+                    *count += 1;
+                    continue;
+                }
+                ngram_counts.insert(ngram.to_owned(), 1);
             }
         }
 
@@ -29,12 +36,8 @@ impl Model {
             .into_iter()
             .map(|(ngram, _count)| ngram);
 
-        let mut ngram_ranks = HashMap::new();
-        for (rank, ngram) in ngrams.enumerate() {
-            ngram_ranks.insert(ngram, rank);
-        }
-
-        Model { ngram_ranks: ngram_ranks }
+        // Nicer way to build a hash map.
+        Model { ngram_ranks: ngrams.enumerate().map(|(a, b)| (b, a)).collect() }
     }
 
     pub fn deserialize(bytes: Vec<u8>) -> Model {
