@@ -13,7 +13,7 @@ impl Classifier {
 
     pub fn train(&mut self, text: &str, name: &str) {
         let model = Model::build_from_text(text);
-        self.models.push((name.to_string(), model));
+        self.models.push((name.to_owned(), model));
     }
 
     pub fn classify(&self, text: &str) -> &String {
