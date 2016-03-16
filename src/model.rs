@@ -54,7 +54,7 @@ impl Model {
     pub fn compare(&self, other: &Model) -> usize {
         let max_difference = other.ngram_ranks.len();
         let mut difference = 0;
-        for (ngram, rank) in self.ngram_ranks.iter() {
+        for (ngram, rank) in &self.ngram_ranks {
             difference += match other.ngram_ranks.get(ngram) {
                 Some(other_rank) => get_difference(*rank, *other_rank),
                 None => max_difference,
