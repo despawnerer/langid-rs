@@ -34,6 +34,7 @@ impl Model {
             .into_iter()
             .sorted_by(|a, b| Ord::cmp(&b.1, &a.1))
             .into_iter()
+            .take(300)
             .map(|(ngram, _count)| ngram);
 
         // Nicer way to build a hash map.
