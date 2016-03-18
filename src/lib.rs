@@ -1,5 +1,6 @@
 pub mod classifier;
 pub mod model;
+pub mod utils;
 
 mod ngrams;
 

@@ -3,14 +3,13 @@ extern crate langid;
 
 use std::env;
 use std::process::exit;
-use std::fs::File;
-use std::io;
-use std::io::{Read, Write, stdout, stderr};
+use std::io::{Write, stdout, stderr};
 
 use getopts::Options;
 
 use langid::model::Model;
 use langid::classifier::Classifier;
+use langid::utils::{read_file_to_string, write_file};
 
 
 const COMMANDS: &'static str = "
@@ -69,7 +68,7 @@ fn train(program: &str, args: Vec<String>) -> ExitCode {
 
     let mut text = String::new();
     for filename in input_filenames {
-        match read_file(&filename, &mut text) {
+        match read_file_to_string(&filename, &mut text) {
             Ok(_) => {},
             Err(error) => {
                 return die(&format!("{}: {}", filename, error));
@@ -98,21 +97,6 @@ fn train(program: &str, args: Vec<String>) -> ExitCode {
 
 fn classify(program: &str, args: Vec<String>) -> ExitCode {
     die("Not implemented")
-}
-
-
-// utilities
-
-fn write_file(filename: &String, contents: &Vec<u8>) -> io::Result<()> {
-    let mut file = try!(File::create(filename));
-    Ok(try!(file.write_all(contents)))
-}
-
-
-fn read_file(filename: &String, buf: &mut String) -> io::Result<usize> {
-    let mut file = try!(File::open(filename));
-    let bytes = try!(file.read_to_string(buf));
-    Ok(bytes)
 }
 
 
