@@ -20,38 +20,42 @@ Commands:
 ";
 
 
+type ExitCode = i32;
+
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let program = args[0].clone();
 
     if args.len() == 1 {
-        print_usage(&program);
-        exit(0);
+        exit(print_usage(&program));
     }
 
     let command = args[1].clone();
     let exit_code = match command.as_str() {
         "train" => train(&program, args),
         "classify" => classify(&program, args),
-        _ => { print_usage(&program); 1 }
+        _ => { print_usage(&program) }
     };
     exit(exit_code);
 }
 
 
-fn print_usage(program: &str) {
+fn print_usage(program: &str) -> ExitCode {
     let brief = format!("Usage: {} <command> [options]", program);
     print!("{}\n{}", brief, COMMANDS);
+    1
 }
 
 
-fn print_command_usage(program: &str, command: &str, opts: Options) {
+fn print_command_usage(program: &str, command: &str, opts: Options) -> ExitCode {
     let brief = format!("Usage: {} {} [options]", program, command);
     print!("{}", opts.usage(&brief));
+    1
 }
 
 
-fn train(program: &str, args: Vec<String>) -> i32 {
+fn train(program: &str, args: Vec<String>) -> ExitCode {
     let mut opts = Options::new();
     opts.optopt("o", "output", "write the trained model into a file instead of stdout", "FILE");
 
@@ -60,8 +64,7 @@ fn train(program: &str, args: Vec<String>) -> i32 {
     let output_filename = matches.opt_str("output");
 
     if input_filenames.len() == 0 {
-        print_command_usage(program, "train", opts);
-        return 1;
+        return print_command_usage(program, "train", opts);
     }
 
     let mut text = String::new();
@@ -93,7 +96,7 @@ fn train(program: &str, args: Vec<String>) -> i32 {
 }
 
 
-fn classify(program: &str, args: Vec<String>) -> i32 {
+fn classify(program: &str, args: Vec<String>) -> ExitCode {
     die("Not implemented")
 }
 
@@ -113,7 +116,7 @@ fn read_file(filename: &String, buf: &mut String) -> io::Result<usize> {
 }
 
 
-fn die(message: &str) -> i32 {
+fn die(message: &str) -> ExitCode {
     writeln!(&mut stderr(), "{}", message).unwrap();
     1
 }
