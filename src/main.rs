@@ -7,8 +7,7 @@ use std::io::{Write, stdout, stderr};
 
 use getopts::Options;
 
-use langid::model::Model;
-use langid::classifier::Classifier;
+use langid::{Classifier, Model};
 use langid::utils::{read_file_to_string, write_file};
 
 

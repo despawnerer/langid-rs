@@ -1,7 +1,10 @@
-pub mod classifier;
-pub mod model;
+mod classifier;
+mod model;
+mod ngrams;
+
 pub mod utils;
 
-mod ngrams;
+pub use classifier::Classifier;
+pub use model::Model;
 
 #[cfg(test)] mod tests;

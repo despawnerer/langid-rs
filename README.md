@@ -21,7 +21,7 @@ Create a model based on input text files. Write to stdout or to the file specifi
 ```rust
 extern crate langid;
 
-use langid::classifier::Classifier;
+use langid::Classifier;
 
 
 fn main() {
