@@ -17,16 +17,19 @@ pub struct Model {
 impl Model {
     pub fn build_from_text(text: &str) -> Model {
         let mut ngram_counts = HashMap::new();
-        for n in 1..6 {
-            for ngram in ngrams(text, n) {
-                // If you don't want to unecessarily allocate strings, this is
-                // the only way to do it. This RFC should fix this if it ever
-                // gets accepted: // https://github.com/rust-lang/rfcs/pull/1533
-                if let Some(count) = ngram_counts.get_mut(ngram) {
-                    *count += 1;
-                    continue;
+        let words = text.split(|ch: char| !ch.is_alphabetic()).filter(|s| !s.is_empty());
+        for word in words {
+            for n in 1..6 {
+                for ngram in ngrams(word, n) {
+                    // If you don't want to unecessarily allocate strings, this is
+                    // the only way to do it. This RFC should fix this if it ever
+                    // gets accepted: // https://github.com/rust-lang/rfcs/pull/1533
+                    if let Some(count) = ngram_counts.get_mut(ngram) {
+                        *count += 1;
+                        continue;
+                    }
+                    ngram_counts.insert(ngram.to_owned(), 1);
                 }
-                ngram_counts.insert(ngram.to_owned(), 1);
             }
         }
 
