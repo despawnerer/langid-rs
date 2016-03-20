@@ -4,6 +4,7 @@ use itertools::Itertools;
 use rustc_serialize::json;
 
 use ngrams::ngrams;
+use errors::DeserializeError;
 
 
 pub struct Model {
@@ -41,10 +42,11 @@ impl Model {
         Model { ngram_ranks: ngrams.enumerate().map(|(a, b)| (b, a)).collect() }
     }
 
-    pub fn deserialize(bytes: Vec<u8>) -> Model {
-        let string = String::from_utf8(bytes).unwrap();
-        let ngram_ranks = json::decode(string.as_str()).unwrap();
-        Model { ngram_ranks: ngram_ranks }
+    pub fn deserialize(bytes: Vec<u8>) -> Result<Model, DeserializeError> {
+        let string = try!(String::from_utf8(bytes));
+        let ngram_ranks = try!(json::decode(string.as_str()));
+        let model = Model { ngram_ranks: ngram_ranks };
+        Ok(model)
     }
 
     pub fn serialize(&self) -> Vec<u8> {

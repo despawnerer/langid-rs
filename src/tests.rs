@@ -9,7 +9,7 @@ use model::Model;
 fn test_serialization_and_deserialization() {
     let model = Model::build_from_text("Testing text for serialization");
     let serialized = model.serialize();
-    let deserialized = Model::deserialize(serialized);
+    let deserialized = Model::deserialize(serialized).unwrap();
     assert_eq!(model.ngram_ranks, deserialized.ngram_ranks);
 }
 
