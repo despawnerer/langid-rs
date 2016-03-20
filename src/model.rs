@@ -1,10 +1,7 @@
-extern crate rustc_serialize;
-extern crate itertools;
-
 use std::collections::HashMap;
 
-use self::itertools::Itertools;
-use self::rustc_serialize::json;
+use itertools::Itertools;
+use rustc_serialize::json;
 
 use ngrams::ngrams;
 

@@ -1,3 +1,6 @@
+extern crate rustc_serialize;
+extern crate itertools;
+
 mod classifier;
 mod model;
 mod ngrams;
