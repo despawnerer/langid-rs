@@ -13,7 +13,7 @@ pub struct Model {
 
 
 impl Model {
-    pub fn build_from_text(text: &str) -> Model {
+    pub fn build_from_text(text: &str) -> Self {
         let mut ngram_counts = HashMap::new();
         let words = text.split(|ch: char| !ch.is_alphabetic()).filter(|s| !s.is_empty());
         for word in words {
@@ -42,7 +42,7 @@ impl Model {
         Model { ngram_ranks: ngrams.enumerate().map(|(a, b)| (b, a)).collect() }
     }
 
-    pub fn deserialize(bytes: Vec<u8>) -> Result<Model, DeserializeError> {
+    pub fn deserialize(bytes: Vec<u8>) -> Result<Self, DeserializeError> {
         let string = try!(String::from_utf8(bytes));
         let ngram_ranks = try!(json::decode(string.as_str()));
         let model = Model { ngram_ranks: ngram_ranks };

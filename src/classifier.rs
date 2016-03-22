@@ -7,7 +7,7 @@ pub struct Classifier {
 
 
 impl Classifier {
-    pub fn new() -> Classifier {
+    pub fn new() -> Self {
         Classifier { models: Vec::new() }
     }
 
