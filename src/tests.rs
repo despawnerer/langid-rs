@@ -1,6 +1,10 @@
+extern crate glob;
+
 use ngrams::ngrams;
 use classifier::Classifier;
 use model::Model;
+
+use self::glob::glob;
 
 
 //model
@@ -45,6 +49,12 @@ fn test_from_array() {
 fn test_vec() {
     let paths = vec!["/one/path.jpg", "/two/path.jpg"];
     let result = Classifier::from_files(&paths);
+}
+
+#[test]
+fn test_from_glob() {
+    let paths = glob("/dev/*").unwrap().filter_map(Result::ok);
+    let result = Classifier::from_files(paths);
 }
 
 
