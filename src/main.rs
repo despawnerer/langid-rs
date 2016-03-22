@@ -7,14 +7,13 @@ use std::io::{Write, stdout, stderr};
 
 use getopts::Options;
 
-use langid::{Classifier, Model};
+use langid::{Model};
 use langid::utils::{read_file_to_string, write_file};
 
 
 const COMMANDS: &'static str = "
 Commands:
     train [-o FILE] <FILE FILE...>   train a model from text
-    classify [FILE]                  classifiy text based on pre-trained models
 ";
 
 
@@ -32,7 +31,6 @@ fn main() {
     let command = args[1].clone();
     let exit_code = match command.as_str() {
         "train" => train(&program, args),
-        "classify" => classify(&program, args),
         _ => { print_usage(&program) }
     };
     exit(exit_code);
@@ -91,11 +89,6 @@ fn train(program: &str, args: Vec<String>) -> ExitCode {
             }
         },
     }
-}
-
-
-fn classify(program: &str, args: Vec<String>) -> ExitCode {
-    die("Not implemented")
 }
 
 
