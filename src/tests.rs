@@ -35,6 +35,18 @@ fn test_classification() {
     );
 }
 
+#[test]
+fn test_from_array() {
+    let paths = ["/dev/nonexistent", "/and/another"];
+    let result = Classifier::from_files(&paths);
+}
+
+#[test]
+fn test_vec() {
+    let paths = vec!["/one/path.jpg", "/two/path.jpg"];
+    let result = Classifier::from_files(&paths);
+}
+
 
 // ngrams
 
