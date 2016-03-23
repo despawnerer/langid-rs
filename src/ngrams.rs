@@ -27,3 +27,37 @@ impl<'a> Iterator for NGramIterator<'a> {
         self.windows.next().map(|((a, _), (b, _))| &self.text[a..b])
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn unigrams() {
+        let text = "Estimates";
+        let unigrams: Vec<_> = ngrams(text, 1).collect();
+        assert_eq!(unigrams, ["E", "s", "t", "i", "m", "a", "t", "e", "s"]);
+    }
+
+    #[test]
+    fn bigrams() {
+        let text = "Estimates";
+        let bigrams: Vec<_> = ngrams(text, 2).collect();
+        assert_eq!(bigrams, ["Es", "st", "ti", "im", "ma", "at", "te", "es"]);
+    }
+
+    #[test]
+    fn trigrams() {
+        let text = "Estimates";
+        let trigrams: Vec<_> = ngrams(text, 3).collect();
+        assert_eq!(trigrams, ["Est", "sti", "tim", "ima", "mat", "ate", "tes"]);
+    }
+
+    #[test]
+    fn longer_than_string() {
+        let text = "String";
+        let sevengrams: Vec<_> = ngrams(text, 7).collect();
+        assert_eq!(sevengrams.len(), 0);
+    }
+}
