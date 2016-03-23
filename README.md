@@ -2,6 +2,7 @@ langid-rs
 =========
 
 [![Build Status](https://travis-ci.org/despawnerer/langid-rs.svg?branch=master)](https://travis-ci.org/despawnerer/langid-rs)
+[![](http://meritbadge.herokuapp.com/langid)](https://crates.io/crates/langid)
 
 NGram-based text classifier written in Rust.
 
