@@ -1,22 +1,39 @@
 langid-rs
 =========
 
+[![Build Status](https://travis-ci.org/despawnerer/langid-rs.svg?branch=master)](https://travis-ci.org/despawnerer/langid-rs)
+
 NGram-based text classifier written in Rust.
 
-This is in development and not ready for any kind of use because it lacks any pre-trained models and an easy way to use them.
+This is not fully ready for use because it lacks pre-trained models and proper documentation.
 
 
 Usage
 -----
 
-### CLI
+### Classifying using pre-trained models
 
-	langid train [-o FILE] <FILE FILE...>
+Use the [glob](https://crates.io/crates/glob) crate to get a list of files. Filenames will be used as names for models.
 
-Create a model based on input text files. Write to stdout or to the file specified by `-o` or `--output`.
+```rust
+extern crate langid;
+extern crate glob;
+
+use langid::Classifier;
+use glob::glob;
 
 
-### Library
+fn main() {
+	let paths = glob("./language_profiles/*.json").unwrap().filter_map(Result::ok);
+	let classifier = Classifier::from_files(paths);
+
+    let language = classifier.classify("Sample text that you want classified.");
+    println!("Sample language: {}", language);
+}
+```
+
+
+### Training and classifying on the fly
 
 ```rust
 extern crate langid;
@@ -38,7 +55,16 @@ fn main() {
 ```
 
 
+### Training
+
+Run `cargo install langid` to get the `langid` CLI utility.
+
+	langid train [-o FILE] <FILE FILE...>
+
+Create a model based on input text files. Write to stdout or to the file specified by `-o` or `--output`.
+
+
 Credits
 -------
 
-William B. Cavnar and John M. Trenkle, “N-Gram-Based Text Categorization”, 1994
+Implements algorithm described by William B. Cavnar and John M. Trenkle, “N-Gram-Based Text Categorization”, 1994.
