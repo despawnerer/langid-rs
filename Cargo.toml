@@ -2,6 +2,7 @@
 name = "langid"
 version = "0.0.1"
 authors = ["Aleksei Voronov <despawn@gmail.com>"]
+license = "MIT/Apache-2.0"
 
 [dependencies]
 rustc-serialize = "0.3.18"
